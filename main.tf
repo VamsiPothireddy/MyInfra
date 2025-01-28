@@ -15,9 +15,22 @@ provider "aws" {
 alias = "west"
   region = "us-west-1"
 }
-resource "aws_eip" "ipam-ip" {
 
-  provider = aws.west
-  domain       = "vpc"
- 
+
+
+resource "aws_instance" "web"{
+
+  ami           = "ami-01816d07b1128cd2d"
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = var.server_name
+    apm-id=var.cost_center
+  }
+}
+
+
+output "ec2-public-ip" {
+  value = aws_instance.web.public_ip
+  
 }
