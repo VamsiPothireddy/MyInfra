@@ -15,9 +15,9 @@ provider "aws" {
 alias = "west"
   region = "us-west-1"
 }
-resource "aws_eip" "ipam-ip" {
+/*resource "aws_eip" "ipam-ip" {
 
   provider = aws.west
   domain       = "vpc"
  
-}
+}*/
