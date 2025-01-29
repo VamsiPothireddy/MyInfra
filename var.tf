@@ -1,7 +1,7 @@
 variable "server_name" {
     description = "The name of the server"
     type = string
- default = "Web Server"
+ default = "Web Server updated"
 }
 
 variable "cost_center" {
