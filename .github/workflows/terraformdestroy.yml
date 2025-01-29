@@ -1,0 +1,60 @@
+name: Terraform Destroy Nightly
+
+on:
+  schedule:
+    - cron: '6 2 * * *'  # Runs every night at 9:06 PM EST (2:06 AM UTC)
+
+jobs:
+  trigger-destroy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Trigger Destroy Run via Terraform Cloud API
+      - name: Trigger Destroy Run via API
+        id: trigger_destroy
+        run: |
+          RESPONSE=$(curl --silent --header "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+                          --header "Content-Type: application/vnd.api+json" \
+                          --request POST \
+                          --data '{
+                            "data": {
+                              "attributes": {
+                                "message": "Scheduled destroy run",
+                                "is-destroy": true
+                              },
+                              "type": "runs",
+                              "relationships": {
+                                "workspace": {
+                                  "data": {
+                                    "id": "ws-BtRFzSeLuMqxup6Y",
+                                    "type": "workspaces"
+                                  }
+                                }
+                              }
+                            }
+                          }' \
+                          https://app.terraform.io/api/v2/runs)
+
+          # Extract Run ID
+          RUN_ID=$(echo "$RESPONSE" | jq -r '.data.id')
+          echo "Run ID: $RUN_ID"
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+
+      # Step 3: Approve Destroy Run
+      - name: Approve Destroy Run
+        run: |
+          curl --header "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+               --header "Content-Type: application/vnd.api+json" \
+               --request POST \
+               --data '{
+                 "data": {
+                   "type": "run-actions",
+                   "attributes": {
+                     "action": "apply"
+                   }
+                 }
+               }' \
+               "https://app.terraform.io/api/v2/runs/${{ env.RUN_ID }}/actions/apply"
