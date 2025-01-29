@@ -18,7 +18,7 @@ alias = "west"
 
 
 
-/*resource "aws_instance" "web"{
+resource "aws_instance" "web"{
 
   ami           = "ami-01816d07b1128cd2d"
   instance_type = "t3.micro"
@@ -33,4 +33,4 @@ alias = "west"
 output "ec2-public-ip" {
   value = aws_instance.web.public_ip
   
-}*/
+}
