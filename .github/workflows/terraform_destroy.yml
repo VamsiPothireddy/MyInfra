@@ -2,7 +2,7 @@ name: Terraform Destroy Nightly
 
 on:
   schedule:
-    - cron: cron: '41 1 * * *'  # Runs every night at 11:30 PM UTC
+    - cron: '44 1 * * *'  # Runs every night at 8:44 PM EST (1:44 AM UTC)
 
 jobs:
   trigger-destroy:
