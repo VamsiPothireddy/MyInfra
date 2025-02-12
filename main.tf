@@ -28,9 +28,21 @@ resource "aws_instance" "web"{
     apm-id=var.cost_center
   }
 }
+resource "aws_instance" "web2"{
+
+  ami           = "ami-01816d07b1128cd2d"
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = var.server_name
+    apm-id=var.cost_center
+  }
+}
+
 
 
 output "ec2-public-ip" {
   value = aws_instance.web.public_ip
   
 }
+
