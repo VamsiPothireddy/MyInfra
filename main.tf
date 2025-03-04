@@ -34,7 +34,7 @@ resource "aws_instance" "web2"{
   instance_type = "t3.micro"
 
   tags = {
-    Name = var.server_name
+    Name = "mycustname"
     apm-id=var.cost_center
   }
 }
